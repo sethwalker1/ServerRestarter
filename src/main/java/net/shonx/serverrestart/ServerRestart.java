@@ -24,11 +24,11 @@
 
 package net.shonx.serverrestart;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.shonx.serverrestart.api.ConfigValues;
@@ -36,21 +36,16 @@ import net.shonx.serverrestart.api.ModLoading;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
-import net.shonx.serverrestart.version_specific.ConfigHelper_12;
-import net.shonx.serverrestart.version_specific.ModLoading_12;
-import net.shonx.serverrestart.version_specific.PlayerServer_12;
+import net.shonx.serverrestart.version_specific.ConfigHelper_16;
+import net.shonx.serverrestart.version_specific.ModLoading_16;
+import net.shonx.serverrestart.version_specific.PlayerServer_16;
 
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = ServerRestart.MOD_ID, serverSideOnly = true, clientSideOnly = false, version = "1")
+@Mod(ServerRestart.MOD_ID)
 public class ServerRestart {
-    public static Logger LOGGER = null;
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "serverrestart";
-    public static File CONFIG_DIR = null;
 
     public static final void onServerCrash() {
         try {
@@ -62,29 +57,14 @@ public class ServerRestart {
         }
     }
 
-    public final ModLoading ml = new ModLoading_12();
-    public final ConfigValues cf = new ConfigHelper_12();
-    public final PlayerServer ps = new PlayerServer_12();
-    private Events events;
+    public final ModLoading ml = new ModLoading_16(this);
+    public final ConfigValues cf = new ConfigHelper_16();
+    public final PlayerServer ps = new PlayerServer_16();
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        LOGGER = event.getModLog();
-        CONFIG_DIR = event.getModConfigurationDirectory();
+    public ServerRestart() {
         ml.loadConfig();
         ml.setServerSideOnly();
         ml.registerEventHandler();
-        events = new Events(this);
-    }
-
-    @EventHandler
-    public void onServerStarted(FMLServerStartedEvent event) {
-        events.onServerStarted(event);
-    }
-
-    @EventHandler
-    public void onServerStopping(FMLServerStoppingEvent event) {
-        events.onServerStopping(event);
     }
 
     public void printLog(long shutdownIn) {

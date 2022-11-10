@@ -29,32 +29,36 @@ import java.util.ArrayList;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.messages.Message;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 
-import net.minecraftforge.fml.server.FMLServerHandler;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-public class PlayerServer_12 implements PlayerServer {
+public class PlayerServer_16 implements PlayerServer {
 
     @Override
     public void announceToServer(Message message) {
-        FMLServerHandler.instance().getServer().getPlayerList().sendMessage(new TextComponentString(message.message).setStyle(new Style().setColor(TextFormatting.LIGHT_PURPLE)), true);
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message.message).withStyle(Style.EMPTY.withColor(Color.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT)), ChatType.SYSTEM, Util.NIL_UUID);
+
     }
 
     @Override
     public void disconnectAllPlayers() {
-        MinecraftServer server = FMLServerHandler.instance().getServer();
-        TextComponentString message = new TextComponentString("Server is restarting!");
-        for (EntityPlayerMP player : new ArrayList<EntityPlayerMP>(server.getPlayerList().getPlayers()))
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        StringTextComponent message = new StringTextComponent("Server is restarting!");
+        for (ServerPlayerEntity player : new ArrayList<ServerPlayerEntity>(server.getPlayerList().getPlayers()))
             player.connection.disconnect(message);
     }
 
     @Override
     public void haltServer() {
-        FMLServerHandler.instance().getServer().initiateShutdown();
+        ServerLifecycleHooks.getCurrentServer().halt(false);
+
     }
 
 }

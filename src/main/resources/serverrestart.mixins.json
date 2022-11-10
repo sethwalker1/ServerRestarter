@@ -1,0 +1,14 @@
+{
+	"required":true,
+	"package":"net.shonx.serverrestart.mixin",
+	"compatibilityLevel":"JAVA_8",
+	"refmap":"serverrestart.mixins.refmap.json",
+	"mixins":[
+		"CrashHookMixin",
+		"WatchdogMixin"
+	],
+	"injectors":{
+		"defaultRequire":1
+	},
+	"minVersion":"0.8"
+}

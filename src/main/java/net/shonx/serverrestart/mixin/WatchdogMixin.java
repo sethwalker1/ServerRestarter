@@ -22,41 +22,23 @@
  * SOFTWARE.
  */
 
-package net.shonx.serverrestart.version_specific;
+package net.shonx.serverrestart.mixin;
 
-import java.io.File;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.shonx.serverrestart.Config.DiscordConfig;
-import net.shonx.serverrestart.Config.MainConfig;
 import net.shonx.serverrestart.ServerRestart;
-import net.shonx.serverrestart.api.ModLoading;
 
-public class ModLoading_12 implements ModLoading {
+import net.minecraft.server.dedicated.ServerHangWatchdog;
 
-    private MainConfig mc;
-    private DiscordConfig dc;
-
-    public ModLoading_12() {
+@Mixin(ServerHangWatchdog.class)
+public class WatchdogMixin {
+    @Inject(method = "run", at = @At(shift = Shift.AFTER, value = "FIELD", target = "Lnet/minecraft/server/dedicated/ServerHangWatchdog;LOGGER:Lorg/apache/logging/log4j/Logger;", ordinal = 0, opcode = Opcodes.GETSTATIC))
+    private void run(CallbackInfo info) {
+        ServerRestart.onServerCrash();
     }
-
-    @Override
-    public void loadConfig() {
-        mc = new MainConfig(new File(ServerRestart.CONFIG_DIR, String.format("%s/general.cfg", ServerRestart.MOD_ID)));
-        mc.save();
-        dc = new DiscordConfig(new File(ServerRestart.CONFIG_DIR, String.format("%s/discord.cfg", ServerRestart.MOD_ID)));
-        dc.save();
-
-    }
-
-    @Override
-    public void setServerSideOnly() {
-        // This is handled in the @Mod annotation in 1.12.
-    }
-
-    @Override
-    public void registerEventHandler() {
-        // Because 1.12.2... the events we care about must be made in the main mod
-        // class.
-    }
-
 }

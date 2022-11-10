@@ -22,27 +22,46 @@
  * SOFTWARE.
  */
 
-package net.shonx.serverrestart.api;
+package net.shonx.serverrestart.version_specific;
 
-import java.util.ArrayList;
+import java.util.function.Supplier;
 
-public interface ConfigValues {
+import org.apache.commons.lang3.tuple.Pair;
 
-    String getAvatarURL();
+import net.shonx.serverrestart.Config;
+import net.shonx.serverrestart.Events;
+import net.shonx.serverrestart.ServerRestart;
+import net.shonx.serverrestart.api.ModLoading;
 
-    Integer getEmbedColor();
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 
-    String getEmbedFooterText();
+public class ModLoading_16 implements ModLoading {
 
-    String getEmbedFooterURL();
+    private ServerRestart mod;
 
-    String getServerUsername();
+    public ModLoading_16(ServerRestart mod) {
+        this.mod = mod;
+    }
 
-    String getStartupMessage();
+    @Override
+    public void loadConfig() {
+        Config.load();
 
-    Long getShutdownLength();
+    }
 
-    ArrayList<String> getShutdownMessages();
+    @Override
+    public void setServerSideOnly() {
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 
-    String getWebhookURL();
+    }
+
+    @Override
+    public void registerEventHandler() {
+        MinecraftForge.EVENT_BUS.register(new Events(mod));
+
+    }
+
 }

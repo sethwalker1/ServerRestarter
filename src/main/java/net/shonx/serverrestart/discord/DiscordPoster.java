@@ -46,10 +46,8 @@ public class DiscordPoster {
         OutputStream output;
         InputStream input;
         try {
-            if ("null".equals(stringUrl)) {
-                ServerRestart.LOGGER.debug("String URL is \"null\". Not sending message.");
+            if ("null".equals(stringUrl))
                 return;
-            }
 
             URL url = new URL(stringUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -81,9 +79,6 @@ public class DiscordPoster {
     public static void setWebhookURL(String webhookURL) {
         if (webhookURL == null)
             throw new NullPointerException("webhookURL cannot be null here.");
-        if ("null".equals(webhookURL) || webhookURL.startsWith("https"))
-            stringUrl = webhookURL;
-        else
-            throw new IllegalStateException("Bad Webhook URL: " + webhookURL);
+        stringUrl = webhookURL;
     }
 }

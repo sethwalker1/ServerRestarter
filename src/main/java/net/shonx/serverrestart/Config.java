@@ -24,91 +24,79 @@
 
 package net.shonx.serverrestart;
 
-import java.io.File;
+import java.util.ArrayList;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig.Type;
 
 public class Config {
-    public static class DiscordConfig {
-        private Configuration config;
+    public static class ServerConfig {
 
-        public static String webhookURL = null;
+        public ConfigValue<String> d_avatarUrl;
+        public ConfigValue<Integer> d_embed_color;
 
-        public DiscordConfig(File file) {
-            config = new Configuration(file);
+        public ConfigValue<String> d_embed_footer_text;
+        public ConfigValue<String> d_embed_footer_url;
+        public ConfigValue<String> d_serverUserName;
+        public ConfigValue<String> d_startupMessage;
+        public ConfigValue<Long> s_shutdownLength;
+        public ConfigValue<ArrayList<String>> s_shutdownMessages;
 
-            load();
-            sync();
+        ServerConfig(Builder builder) {
+            // Server Restart Values
+            builder.push("restart");
+            s_shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
+            builder.pop();
 
-            MinecraftForge.EVENT_BUS.register(this);
+            // Discord embed Values
+            builder.push("discord");
+
+            d_startupMessage = builder.comment("The string to send when the server first starts. Mentions are allowed here.").define("startupMessage", "null");
+            d_serverUserName = builder.comment("The name of the webhook to send to Discord. Use \"null\" to disable.").define("serverName", "Server");
+            d_avatarUrl = builder.comment("The URL to use for the webhook avatar. Use \"null\" to disable.").define("avatarUrl", "null");
+            d_embed_color = builder.comment("The color to use for the Discord embed.").defineInRange("embedColor", 15258703, 0, 16777215);
+            d_embed_footer_text = builder.comment("The comment to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterText", "Server Restart Notification");
+            d_embed_footer_url = builder.comment("The image URL to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterUrl", "null");
+            builder.pop();
+
         }
 
-        @SubscribeEvent
-        public void onConfigChanged(OnConfigChangedEvent event) {
-            if (ServerRestart.MOD_ID.equals(event.getModID()))
-                sync();
-        }
+    }
 
-        public void sync() {
-            // Get Config
-            webhookURL = config.get("discord", "webhook", "null", "The Discord webhook URL. Use \"null\" to disable.").getString();
-        }
+    public static class WebhookConfig {
+        public ConfigValue<String> d_webhook_url;
 
-        public void save() {
-            config.save();
-        }
-
-        public void load() {
-            config.load();
+        WebhookConfig(Builder builder) {
+            builder.push("discord");
+            d_webhook_url = builder.comment("The Discord webhook URL. Use \"null\" to disable.").define("webhook", "null");
+            builder.pop();
         }
     }
 
-    public static class MainConfig {
-        private Configuration config;
+    public static final ServerConfig SERVER;
+    public static final WebhookConfig WEBHOOK;
 
-        public static Long shutdownLength = null;
-        public static String embedFooterUrl = null;
-        public static String embedFooterText = null;
-        public static Integer embedColor = null;
-        public static String avatarUrl = null;
-        public static String startupMessage = null;
-        public static String serverName = null;
+    private static final ForgeConfigSpec SERVER_SPEC;
 
-        public MainConfig(File file) {
-            config = new Configuration(file);
+    private static final ForgeConfigSpec WEBHOOK_SPEC;
 
-            load();
-            sync();
-
-            MinecraftForge.EVENT_BUS.register(this);
-        }
-
-        @SubscribeEvent
-        public void onConfigChanged(OnConfigChangedEvent event) {
-            if (ServerRestart.MOD_ID.equals(event.getModID()))
-                sync();
-        }
-
-        public void sync() {
-            // Get Config
-            shutdownLength = config.get("restart", "shutdownLength", 21600, "Time in seconds before the server will restart.", 60, Integer.MAX_VALUE).getLong();
-            embedFooterUrl = config.get("discord", "embedFooterUrl", "null", "The image URL to show in the Discord embed Footer. Use \"null\" to disable.").getString();
-            embedFooterText = config.get("discord", "embedFooterText", "null", "The comment to show in the Discord embed Footer. Use \"null\" to disable.").getString();
-            embedColor = config.get("discord", "embedColor", 15258703, "The color to use for the Discord embed.", 0, 16777215).getInt();
-            avatarUrl = config.get("discord", "avatarUrl", "null", "The URL to use for the webhook avatar. Use \"null\" to disable.").getString();
-            startupMessage = config.get("discord", "startupMessage", "null", "The string to send when the server first starts. Mentions are allowed here.").getString();
-            serverName = config.get("discord", "serverName", "Server", "The name of the webhook to send to Discord. Use \"null\" to disable.").getString();
-        }
-
-        public void save() {
-            config.save();
-        }
-
-        public void load() {
-            config.load();
-        }
+    static {
+        Pair<ServerConfig, ForgeConfigSpec> serverPair = new Builder().configure(Config.ServerConfig::new);
+        SERVER_SPEC = serverPair.getRight();
+        SERVER = serverPair.getLeft();
+        Pair<WebhookConfig, ForgeConfigSpec> webhookPair = new Builder().configure(Config.WebhookConfig::new);
+        WEBHOOK_SPEC = webhookPair.getRight();
+        WEBHOOK = webhookPair.getLeft();
     }
+
+    public static void load() {
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "general"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "discord-webhook"));
+    }
+
 }

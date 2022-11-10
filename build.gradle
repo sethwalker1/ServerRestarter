@@ -4,6 +4,8 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
     id 'org.cadixdev.licenser' version '0.6.1'
 }
 
@@ -54,6 +56,8 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
+            
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -68,6 +72,8 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
+            
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -84,6 +90,8 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             args '--mod', 'serverrestart', '--all', '--output', file('src/main/generated/'), '--existing', file('src/main/resources/')
+
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -107,19 +115,36 @@ sourceSets {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:' + minecraft_version + '-' + forge_version
+    
+    // Apply Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
 
+mixin {
+    // MixinGradle Settings
+    config 'serverrestart.mixins.json'
+    add sourceSets.main, 'serverrestart.mixins.refmap.json'
+
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
+
+    overwriteErrorLevel = 'error'
 }
 
 processResources {
-  filesMatching("mcmod.info") {
-    expand 'version': version
+  filesMatching("META-INF/mods.toml") {
+    expand 'version': version,
+           'loader_range': loader_range,
+           'minecraft_range': minecraft_range,
+           'forge_range': forge_range
   }
 }
-
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
+            "MixinConfigs": "serverrestart.mixins.json",
             "Specification-Title": "serverrestart",
             "Specification-Vendor": "shroomdog27",
             "Specification-Version": "1", // We are version 1 of ourselves

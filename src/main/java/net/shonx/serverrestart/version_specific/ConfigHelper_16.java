@@ -24,51 +24,59 @@
 
 package net.shonx.serverrestart.version_specific;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import net.shonx.serverrestart.Config;
 import net.shonx.serverrestart.api.ConfigValues;
 
-public class ConfigHelper_12 implements ConfigValues {
+public class ConfigHelper_16 implements ConfigValues {
 
     @Override
     public String getAvatarURL() {
-        return Objects.requireNonNull(Config.MainConfig.avatarUrl);
+        return Objects.requireNonNull(Config.SERVER.d_avatarUrl.get());
+
     }
 
     @Override
     public Integer getEmbedColor() {
-        return Objects.requireNonNull(Config.MainConfig.embedColor);
+        return Objects.requireNonNull(Config.SERVER.d_embed_color.get());
     }
 
     @Override
     public String getEmbedFooterText() {
-        return Objects.requireNonNull(Config.MainConfig.embedFooterText);
+        return Objects.requireNonNull(Config.SERVER.d_embed_footer_text.get());
     }
 
     @Override
     public String getEmbedFooterURL() {
-        return Objects.requireNonNull(Config.MainConfig.embedFooterUrl);
+        return Objects.requireNonNull(Config.SERVER.d_embed_footer_url.get());
     }
 
     @Override
     public String getServerUsername() {
-        return Objects.requireNonNull(Config.MainConfig.serverName);
+        return Objects.requireNonNull(Config.SERVER.d_serverUserName.get());
     }
 
     @Override
     public String getStartupMessage() {
-        return Objects.requireNonNull(Config.MainConfig.startupMessage);
+        return Objects.requireNonNull(Config.SERVER.d_startupMessage.get());
     }
 
     @Override
     public Long getShutdownLength() {
-        return Objects.requireNonNull(Config.MainConfig.shutdownLength);
+        return Objects.requireNonNull(Config.SERVER.s_shutdownLength.get());
+    }
+
+    @Override
+    public ArrayList<String> getShutdownMessages() {
+        return Objects.requireNonNull(Config.SERVER.s_shutdownMessages.get());
     }
 
     @Override
     public String getWebhookURL() {
-        return Objects.requireNonNull(Config.DiscordConfig.webhookURL);
+        return Objects.requireNonNull(Config.WEBHOOK.d_webhook_url.get());
+
     }
 
 }

@@ -22,18 +22,23 @@
  * SOFTWARE.
  */
 
-package net.shonx.serverrestart.version_specific;
+package net.shonx.serverrestart.mixin;
 
-import java.nio.file.Path;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.shonx.serverrestart.ServerRestart;
-import net.shonx.serverrestart.api.FML;
 
-public class FML_12 implements FML {
+import net.minecraft.crash.CrashReport;
+import net.minecraft.server.MinecraftServer;
 
-    @Override
-    public Path getConfigDir() {
-        return ServerRestart.CONFIG_DIR.toPath();
+@Mixin(MinecraftServer.class)
+public abstract class CrashHookMixin {
+
+    @Inject(method = "onServerCrash", at = @At("HEAD"))
+    private void onServerCrash(CrashReport crash, CallbackInfo info) {
+        ServerRestart.onServerCrash();
     }
-
 }

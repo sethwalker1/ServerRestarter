@@ -38,12 +38,12 @@ import com.google.gson.Gson;
 
 import net.shonx.serverrestart.ServerRestart;
 import net.shonx.serverrestart.api.FML;
-import net.shonx.serverrestart.version_specific.FML_12;
+import net.shonx.serverrestart.version_specific.FML_16;
 
 public class MessageLoader {
 
     private static final Gson gson = new Gson();
-    private static final FML fml = new FML_12();
+    private static final FML fml = new FML_16();
 
     public static ArrayList<Message> loadMessages() {
         try {

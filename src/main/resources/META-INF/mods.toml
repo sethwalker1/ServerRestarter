@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="${loader_range}"
+license="MIT license. See LICENSE.txt for a copy."
+
+[[mods]]
+    modId="serverrestart" 
+    version="${version}"
+    displayName="Server Restart"
+    authors="shroomdog27"
+    description='''
+    A simple mod that automatically shuts down servers after a specified time period, with occasional announcements.
+    '''
+
+[[dependencies.serverrestart]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.serverrestart]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_range}"
+    ordering="NONE"
+    side="BOTH"

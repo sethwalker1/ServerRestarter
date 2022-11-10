@@ -22,27 +22,19 @@
  * SOFTWARE.
  */
 
-package net.shonx.serverrestart.api;
+package net.shonx.serverrestart.version_specific;
 
-import java.util.ArrayList;
+import java.nio.file.Path;
 
-public interface ConfigValues {
+import net.shonx.serverrestart.api.FML;
 
-    String getAvatarURL();
+import net.minecraftforge.fml.loading.FMLPaths;
 
-    Integer getEmbedColor();
+public class FML_16 implements FML {
 
-    String getEmbedFooterText();
+    @Override
+    public Path getConfigDir() {
+        return FMLPaths.CONFIGDIR.get();
+    }
 
-    String getEmbedFooterURL();
-
-    String getServerUsername();
-
-    String getStartupMessage();
-
-    Long getShutdownLength();
-
-    ArrayList<String> getShutdownMessages();
-
-    String getWebhookURL();
 }
