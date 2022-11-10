@@ -33,16 +33,16 @@ import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
 import net.shonx.serverrestart.messages.Message;
 import net.shonx.serverrestart.messages.MessageLoader;
-import net.shonx.serverrestart.version_specific.PlayerServer_16;
+import net.shonx.serverrestart.version_specific.PlayerServer_18;
 
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 public class Events {
     private ArrayList<Message> messages;
 
-    private final ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);;
+    private final ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
 
     private ServerRestart mod;
 
@@ -50,11 +50,11 @@ public class Events {
 
     public Events(ServerRestart mod) {
         this.mod = mod;
-        api = new PlayerServer_16();
+        api = new PlayerServer_18();
     }
 
     @SubscribeEvent
-    public void onServerStarted(FMLServerStartedEvent event) {
+    public void onServerStarted(ServerStartedEvent event) {
         mod.onServerStart();
         final long shutdownIn = mod.cf.getShutdownLength();
 
@@ -73,7 +73,7 @@ public class Events {
     }
 
     @SubscribeEvent
-    public void onServerStopping(FMLServerStoppingEvent event) {
+    public void onServerStopping(ServerStoppingEvent event) {
         EmbedObject embed = new EmbedObject("The server has shut down!", null);
         DiscordPoster.postEmbed(embed);
         timer.shutdownNow();

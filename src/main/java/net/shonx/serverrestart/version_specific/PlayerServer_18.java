@@ -29,29 +29,30 @@ import java.util.ArrayList;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.messages.Message;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.Util;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraft.server.level.ServerPlayer;
 
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
-public class PlayerServer_16 implements PlayerServer {
+public class PlayerServer_18 implements PlayerServer {
 
     @Override
     public void announceToServer(Message message) {
-        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message.message).withStyle(Style.EMPTY.withColor(Color.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT)), ChatType.SYSTEM, Util.NIL_UUID);
-
+        MutableComponent component = new TextComponent(message.message).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT));
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
     }
 
     @Override
     public void disconnectAllPlayers() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        StringTextComponent message = new StringTextComponent("Server is restarting!");
-        for (ServerPlayerEntity player : new ArrayList<ServerPlayerEntity>(server.getPlayerList().getPlayers()))
+        TextComponent message = new TextComponent("Server is restarting!");
+        for (ServerPlayer player : new ArrayList<ServerPlayer>(server.getPlayerList().getPlayers()))
             player.connection.disconnect(message);
     }
 

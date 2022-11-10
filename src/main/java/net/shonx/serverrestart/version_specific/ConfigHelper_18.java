@@ -30,7 +30,7 @@ import java.util.Objects;
 import net.shonx.serverrestart.Config;
 import net.shonx.serverrestart.api.ConfigValues;
 
-public class ConfigHelper_16 implements ConfigValues {
+public class ConfigHelper_18 implements ConfigValues {
 
     @Override
     public String getAvatarURL() {

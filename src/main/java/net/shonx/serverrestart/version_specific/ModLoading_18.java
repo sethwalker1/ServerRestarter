@@ -24,17 +24,40 @@
 
 package net.shonx.serverrestart.version_specific;
 
-import java.nio.file.Path;
+import net.shonx.serverrestart.Config;
+import net.shonx.serverrestart.Events;
+import net.shonx.serverrestart.ServerRestart;
+import net.shonx.serverrestart.api.ModLoading;
 
-import net.shonx.serverrestart.api.FML;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.IExtensionPoint.DisplayTest;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.network.NetworkConstants;
 
-import net.minecraftforge.fml.loading.FMLPaths;
+public class ModLoading_18 implements ModLoading {
 
-public class FML_16 implements FML {
+    private ServerRestart mod;
+
+    public ModLoading_18(ServerRestart mod) {
+        this.mod = mod;
+    }
 
     @Override
-    public Path getConfigDir() {
-        return FMLPaths.CONFIGDIR.get();
+    public void loadConfig() {
+        Config.load();
+
+    }
+
+    @Override
+    public void setServerSideOnly() {
+        ModLoadingContext.get().registerExtensionPoint(DisplayTest.class, () -> new DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+
+    }
+
+    @Override
+    public void registerEventHandler() {
+        MinecraftForge.EVENT_BUS.register(new Events(mod));
+
     }
 
 }

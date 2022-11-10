@@ -36,9 +36,9 @@ import net.shonx.serverrestart.api.ModLoading;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
-import net.shonx.serverrestart.version_specific.ConfigHelper_16;
-import net.shonx.serverrestart.version_specific.ModLoading_16;
-import net.shonx.serverrestart.version_specific.PlayerServer_16;
+import net.shonx.serverrestart.version_specific.ConfigHelper_18;
+import net.shonx.serverrestart.version_specific.ModLoading_18;
+import net.shonx.serverrestart.version_specific.PlayerServer_18;
 
 import net.minecraftforge.fml.common.Mod;
 
@@ -57,9 +57,9 @@ public class ServerRestart {
         }
     }
 
-    public final ModLoading ml = new ModLoading_16(this);
-    public final ConfigValues cf = new ConfigHelper_16();
-    public final PlayerServer ps = new PlayerServer_16();
+    public final ModLoading ml = new ModLoading_18(this);
+    public final ConfigValues cf = new ConfigHelper_18();
+    public final PlayerServer ps = new PlayerServer_18();
 
     public ServerRestart() {
         ml.loadConfig();

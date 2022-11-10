@@ -33,12 +33,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.shonx.serverrestart.ServerRestart;
 
-import net.minecraft.server.dedicated.ServerHangWatchdog;
+import net.minecraft.server.dedicated.ServerWatchdog;
 
-@Mixin(ServerHangWatchdog.class)
+
+@Mixin(ServerWatchdog.class)
 public class WatchdogMixin {
-    @Inject(method = "run", at = @At(shift = Shift.AFTER, value = "FIELD", target = "Lnet/minecraft/server/dedicated/ServerHangWatchdog;LOGGER:Lorg/apache/logging/log4j/Logger;", ordinal = 0, opcode = Opcodes.GETSTATIC))
-    private void run(CallbackInfo info) {
+    @Inject(method = "run", at = @At(shift = Shift.AFTER, value = "FIELD", target = "Lnet/minecraft/server/dedicated/ServerWatchdog;LOGGER:Lorg/slf4j/Logger;", ordinal = 0, opcode = Opcodes.GETSTATIC))
+    private void run(CallbackInfo ci) {
         ServerRestart.onServerCrash();
     }
 }
