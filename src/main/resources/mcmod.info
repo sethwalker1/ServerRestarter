@@ -1,0 +1,11 @@
+[
+	{
+		"modid":"serverrestart",
+		"name":"Server Restart",
+		"description":"Automatically restarts the server and notifies Discord.",
+		"version":"${version}",
+		"authorList":[
+			"shroomdog27"
+		]
+	}
+]
