@@ -28,14 +28,21 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import net.shonx.serverrestart.Config;
+import net.shonx.serverrestart.ServerRestart;
 import net.shonx.serverrestart.api.ConfigValues;
 
-public class ConfigHelper_18 implements ConfigValues {
+public class ConfigHelper_19 implements ConfigValues {
+
+    @SuppressWarnings("unused")
+    private ServerRestart mod;
+
+    public ConfigHelper_19(ServerRestart mod) {
+        this.mod = mod;
+    }
 
     @Override
     public String getAvatarURL() {
         return Objects.requireNonNull(Config.SERVER.d_avatarUrl.get());
-
     }
 
     @Override

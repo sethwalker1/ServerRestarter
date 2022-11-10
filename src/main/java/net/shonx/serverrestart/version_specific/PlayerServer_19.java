@@ -26,32 +26,37 @@ package net.shonx.serverrestart.version_specific;
 
 import java.util.ArrayList;
 
+import net.shonx.serverrestart.ServerRestart;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.messages.Message;
 
-import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-public class PlayerServer_18 implements PlayerServer {
+public class PlayerServer_19 implements PlayerServer {
+
+    public PlayerServer_19(ServerRestart mod) {
+    }
 
     @Override
     public void announceToServer(Message message) {
-        MutableComponent component = new TextComponent(message.message).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT));
-        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
+        LiteralContents contents = new LiteralContents(message.message);
+        MutableComponent component = MutableComponent.create(contents).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT));
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastSystemMessage(component, ChatType.SYSTEM);
+
     }
 
     @Override
     public void disconnectAllPlayers() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        TextComponent message = new TextComponent("Server is restarting!");
+        MutableComponent message = MutableComponent.create(new LiteralContents("Server is restarting!"));
         for (ServerPlayer player : new ArrayList<ServerPlayer>(server.getPlayerList().getPlayers()))
             player.connection.disconnect(message);
     }

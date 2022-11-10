@@ -33,8 +33,6 @@ import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
 import net.shonx.serverrestart.messages.Message;
 import net.shonx.serverrestart.messages.MessageLoader;
-import net.shonx.serverrestart.version_specific.PlayerServer_18;
-
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,7 +48,7 @@ public class Events {
 
     public Events(ServerRestart mod) {
         this.mod = mod;
-        api = new PlayerServer_18();
+        api = mod.ps;
     }
 
     @SubscribeEvent
@@ -66,9 +64,13 @@ public class Events {
         mod.printLog(shutdownIn);
         messages = MessageLoader.loadMessages();
         messages.forEach(message -> timer.schedule(() -> {
-            api.announceToServer(message);
-            if (message.announceToDiscord)
-                DiscordPoster.postEmbed(new EmbedObject(message.message, null));
+            try {
+                api.announceToServer(message);
+                if (message.announceToDiscord)
+                    DiscordPoster.postEmbed(new EmbedObject(message.message, null));
+            } catch (Throwable e) {
+                ServerRestart.LOGGER.error("Error announcing message.", e);
+            }
         }, shutdownIn - message.time, TimeUnit.SECONDS));
     }
 

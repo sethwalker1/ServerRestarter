@@ -45,4 +45,5 @@ public interface ConfigValues {
     ArrayList<String> getShutdownMessages();
 
     String getWebhookURL();
+
 }

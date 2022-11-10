@@ -7,6 +7,7 @@ license="MIT license. See LICENSE.txt for a copy."
     version="${version}"
     displayName="Server Restart"
     authors="shroomdog27"
+    displayTest="IGNORE_SERVER_VERSION"
     description='''
     A simple mod that automatically shuts down servers after a specified time period, with occasional announcements.
     '''
