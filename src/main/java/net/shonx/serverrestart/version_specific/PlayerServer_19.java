@@ -27,10 +27,10 @@ package net.shonx.serverrestart.version_specific;
 import java.util.ArrayList;
 
 import net.shonx.serverrestart.ServerRestart;
+import net.shonx.serverrestart.api.ConfigValues;
 import net.shonx.serverrestart.api.PlayerServer;
 import net.shonx.serverrestart.messages.Message;
 
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -42,14 +42,17 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class PlayerServer_19 implements PlayerServer {
 
+    private ConfigValues config;
+
     public PlayerServer_19(ServerRestart mod) {
+        this.config = mod.cf;
     }
 
     @Override
     public void announceToServer(Message message) {
         LiteralContents contents = new LiteralContents(message.message);
         MutableComponent component = MutableComponent.create(contents).withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF00FF)).withFont(Style.DEFAULT_FONT));
-        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastSystemMessage(component, ChatType.SYSTEM);
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastSystemMessage(component, config.bypassSystemChat());
 
     }
 

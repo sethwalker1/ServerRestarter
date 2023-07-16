@@ -83,7 +83,11 @@ public class ConfigHelper_19 implements ConfigValues {
     @Override
     public String getWebhookURL() {
         return Objects.requireNonNull(Config.WEBHOOK.d_webhook_url.get());
-
+    }
+    
+    @Override
+    public Boolean bypassSystemChat() {
+        return Objects.requireNonNull(Config.SERVER.s_pBypassHiddenChat.get());
     }
 
 }

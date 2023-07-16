@@ -46,11 +46,13 @@ public class Config {
         public ConfigValue<String> d_startupMessage;
         public ConfigValue<Long> s_shutdownLength;
         public ConfigValue<ArrayList<String>> s_shutdownMessages;
+        public ConfigValue<Boolean> s_pBypassHiddenChat;
 
         ServerConfig(Builder builder) {
             // Server Restart Values
             builder.push("restart");
             s_shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
+            s_pBypassHiddenChat = builder.comment("Should the announce messages bypass hidden chat?").define("pBypassHiddenChat", false);
             builder.pop();
 
             // Discord embed Values
