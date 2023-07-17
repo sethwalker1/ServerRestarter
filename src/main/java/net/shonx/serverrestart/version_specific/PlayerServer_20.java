@@ -40,11 +40,11 @@ import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-public class PlayerServer_19 implements PlayerServer {
+public class PlayerServer_20 implements PlayerServer {
 
     private ConfigValues config;
 
-    public PlayerServer_19(ServerRestart mod) {
+    public PlayerServer_20(ServerRestart mod) {
         this.config = mod.cf;
     }
 

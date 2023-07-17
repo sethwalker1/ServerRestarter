@@ -31,11 +31,11 @@ import net.shonx.serverrestart.api.ModLoading;
 
 import net.minecraftforge.common.MinecraftForge;
 
-public class ModLoading_19 implements ModLoading {
+public class ModLoading_20 implements ModLoading {
 
     private ServerRestart mod;
 
-    public ModLoading_19(ServerRestart mod) {
+    public ModLoading_20(ServerRestart mod) {
         this.mod = mod;
     }
 

@@ -31,12 +31,12 @@ import net.shonx.serverrestart.Config;
 import net.shonx.serverrestart.ServerRestart;
 import net.shonx.serverrestart.api.ConfigValues;
 
-public class ConfigHelper_19 implements ConfigValues {
+public class ConfigHelper_20 implements ConfigValues {
 
     @SuppressWarnings("unused")
     private ServerRestart mod;
 
-    public ConfigHelper_19(ServerRestart mod) {
+    public ConfigHelper_20(ServerRestart mod) {
         this.mod = mod;
     }
 

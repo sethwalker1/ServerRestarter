@@ -30,7 +30,7 @@ import net.shonx.serverrestart.api.FML;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 
-public class FML_19 implements FML {
+public class FML_20 implements FML {
 
     @Override
     public Path getConfigDir() {
