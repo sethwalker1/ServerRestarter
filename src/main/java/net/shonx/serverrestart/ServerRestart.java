@@ -46,7 +46,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = ServerRestart.MOD_ID, serverSideOnly = true, clientSideOnly = false, version = "1")
+@Mod(
+        modid = ServerRestart.MOD_ID,
+        name = "Server Restart",
+        version = "1",
+        serverSideOnly = true,
+        acceptableRemoteVersions = "*"
+)
 public class ServerRestart {
     public static Logger LOGGER = null;
     public static final String MOD_ID = "serverrestart";
