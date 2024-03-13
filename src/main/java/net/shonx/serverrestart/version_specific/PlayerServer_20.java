@@ -60,14 +60,37 @@ public class PlayerServer_20 implements PlayerServer {
     public void disconnectAllPlayers() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         MutableComponent message = MutableComponent.create(new LiteralContents("Server is restarting!"));
-        for (ServerPlayer player : new ArrayList<ServerPlayer>(server.getPlayerList().getPlayers()))
+
+        // Snapshot of all connected players
+        ArrayList<ServerPlayer> serverPlayers = new ArrayList<>(server.getPlayerList().getPlayers());
+
+        if (serverPlayers.isEmpty())
+            return;
+
+        ServerRestart.LOGGER.info("Disconnecting all players.");
+
+        // Disconnect all players using the snapshot list
+        for (ServerPlayer player : serverPlayers) {
             player.connection.disconnect(message);
+        }
+
+        // Stall until the server's player list is empty
+        while (!server.getPlayerList().getPlayers().isEmpty()) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                ServerRestart.LOGGER.error("Thread interrupted while awaiting player disconnection", e);
+                break;
+            }
+        }
+
+        ServerRestart.LOGGER.info("All players have been successfully disconnected.");
     }
 
     @Override
     public void haltServer() {
         ServerLifecycleHooks.getCurrentServer().halt(false);
-
     }
 
 }
